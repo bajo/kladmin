@@ -156,9 +156,9 @@ unless ( $CW ) { $CW = 15; }
 # Options 
 ##############################################################################
 
-getopts ( "AaDf:G:Ii:klL:p:S:Uu:v" );
+getopts ( "AaDf:G:Ii:klL:m:p:S:Uu:v" );
 
-our ( $opt_A, $opt_a, $opt_D, $opt_f, $opt_G, $opt_I, $opt_i, $opt_k, $opt_L, $opt_l, $opt_p, $opt_S, $opt_u, $opt_v );
+our ( $opt_A, $opt_a, $opt_D, $opt_f, $opt_G, $opt_I, $opt_i, $opt_k, $opt_L, $opt_l, $opt_m, $opt_p, $opt_S, $opt_u, $opt_v );
 
 
 unless ( $opt_k || $opt_l || $opt_a ) { 
@@ -1161,7 +1161,7 @@ sub afsGetPrm {
 
 sub ldpAddUsr {
 
-	my ( $ldapadd, $uname, $id, $dir, $gname, $sname ) = @_;
+	my ( $ldapadd, $uname, $id, $dir, $gname, $sname, $mail ) = @_;
 
 	if ( $gname eq undef ) { $gname = "Given name"; }
 
@@ -1179,7 +1179,9 @@ sub ldpAddUsr {
 	$ldif[$i] = "objectClass: top\n"; $i++;
 	$ldif[$i] = "objectClass: $OBJCL\n"; $i++;
 	$ldif[$i] = "objectClass: posixAccount\n"; $i++;
+	$ldif[$i] = "objectClass: inetOrgPerson\n"; $i++;
 	$ldif[$i] = "uid: $uname\n"; $i++;
+	$ldif[$i] = "mail: $mail\n"; $i++;
 	$ldif[$i] = "uidNumber: $id\n"; $i++;
 	$ldif[$i] = "gidNumber: $id\n"; $i++;
 	$ldif[$i] = "cn: $gname\n"; $i++;
@@ -1566,7 +1568,7 @@ sub genAddUsr {
 				$genDetDirRes = "/home";
 			}
 
-			my $ldpAddUsrOut = ldpAddUsr ( $LDAP { add }, $opt_u, $genDetIdsRes, $genDetDirRes, $opt_G, $opt_S ); 
+			my $ldpAddUsrOut = ldpAddUsr ( $LDAP { add }, $opt_u, $genDetIdsRes, $genDetDirRes, $opt_G, $opt_S, $opt_m ); 
 
 			print $ldpAddUsrOut;
 		}
