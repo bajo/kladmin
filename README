@@ -70,7 +70,7 @@ section at the beginning of the script).
 kladmin [-A | -D] -u <user_name>
 
 kladmin [-A | -D] [-k] [-l] [-a] -u <user_name> [-p <password>]
-        [-i <id_number>] [-G <given_name>] [-S <surname>]
+        [-i <id_number>] [-G <given_name>] [-S <surname>] -m <email_address>
 
 kladmin [-k] [-l] [-a] -f <file_name>
 
@@ -169,6 +169,9 @@ kladmin -v
 	n	One column: all account names in use across all three subsystems.
 
 -l	Specifies an LDAP account.
+
+-m email_address
+	Specifies the emailaddress of a user for an LDAP account.
 
 -p password
 	Specifies a password to be used with a Kerberos account. If omitted, the 
