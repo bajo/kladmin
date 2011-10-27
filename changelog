@@ -1,3 +1,9 @@
+kladmin (0.2.2)
+
+  * Added attribute rfc822Mailbox
+
+ -- Markus Bajones <bajo@fet.at> Thu, 27 October 2011
+
 kladmin (0.2.1)
 
   * Replaced the genDetIds subroutine with a more robust

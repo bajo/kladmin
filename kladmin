@@ -1179,8 +1179,8 @@ sub ldpAddUsr {
 	$ldif[$i] = "objectClass: top\n"; $i++;
 	$ldif[$i] = "objectClass: $OBJCL\n"; $i++;
 	$ldif[$i] = "objectClass: posixAccount\n"; $i++;
+	$ldif[$i] = "objectClass: JammMailAccount\n"; $i++;
 	$ldif[$i] = "uid: $uname\n"; $i++;
-	$ldif[$i] = "rfc822Mailbox: $mail\n"; $i++;
 	$ldif[$i] = "uidNumber: $id\n"; $i++;
 	$ldif[$i] = "gidNumber: $id\n"; $i++;
 	$ldif[$i] = "cn: $gname\n"; $i++;
@@ -1188,6 +1188,10 @@ sub ldpAddUsr {
 	$ldif[$i] = "loginShell: /bin/bash\n"; $i++;
 	$ldif[$i] = "homeDirectory: $dir/$uname\n"; $i++;
 	$ldif[$i] = "userPassword: {CRYPT}*\n"; $i++;
+	$ldif[$i] = "rfc822Mailbox: $mail\n"; $i++;
+	$ldif[$i] = "quota: 1G\n"; $i++;
+	$ldif[$i] = "JammMailAlias: $gname.$sname@fet.at\n"; $i++;
+	$ldif[$i] = "accountActive: TRUE\n"; $i++;
 	$ldif[$i] = "\n"; $i++;
 
 	my $random = int( rand 65536 ) + 1;
