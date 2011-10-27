@@ -1179,9 +1179,8 @@ sub ldpAddUsr {
 	$ldif[$i] = "objectClass: top\n"; $i++;
 	$ldif[$i] = "objectClass: $OBJCL\n"; $i++;
 	$ldif[$i] = "objectClass: posixAccount\n"; $i++;
-	$ldif[$i] = "objectClass: inetOrgPerson\n"; $i++;
 	$ldif[$i] = "uid: $uname\n"; $i++;
-	$ldif[$i] = "mail: $mail\n"; $i++;
+	$ldif[$i] = "rfc822Mailbox: $mail\n"; $i++;
 	$ldif[$i] = "uidNumber: $id\n"; $i++;
 	$ldif[$i] = "gidNumber: $id\n"; $i++;
 	$ldif[$i] = "cn: $gname\n"; $i++;
