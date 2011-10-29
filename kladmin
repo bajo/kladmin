@@ -186,6 +186,7 @@ Options: -A: Add an account.
 	 -k: Specifies a Kerberos account.
 	 -L: <code> for producing lists of various names and ID numbers.
 	 -l: Specifies an LDAP account.
+	 -m: <email_address> of a new user.
 	 -p: <password> for a Kerberos account (instead of a random password).
 	 -S: <surname> of a new user.
 	 -u: <user_name> of (or for) an account.
@@ -1167,6 +1168,10 @@ sub ldpAddUsr {
 
 	if ( $sname eq undef ) { $sname = "Surname"; }
 
+
+	my $lcgname = lc ($gname);
+	my $lcsname = lc ($sname);
+
 	my @ldif; my $i = 0; 
 
 	$ldif[$i] = "dn: cn=$uname,$LDAPGPTH\n"; $i++;
@@ -1179,7 +1184,8 @@ sub ldpAddUsr {
 	$ldif[$i] = "objectClass: top\n"; $i++;
 	$ldif[$i] = "objectClass: $OBJCL\n"; $i++;
 	$ldif[$i] = "objectClass: posixAccount\n"; $i++;
-	$ldif[$i] = "objectClass: JammMailAccount\n"; $i++;
+	$ldif[$i] = "objectClass: inetOrgPerson\n"; $i++;
+	$ldif[$i] = "objectClass: fetMail\n"; $i++;
 	$ldif[$i] = "uid: $uname\n"; $i++;
 	$ldif[$i] = "uidNumber: $id\n"; $i++;
 	$ldif[$i] = "gidNumber: $id\n"; $i++;
@@ -1188,10 +1194,9 @@ sub ldpAddUsr {
 	$ldif[$i] = "loginShell: /bin/bash\n"; $i++;
 	$ldif[$i] = "homeDirectory: $dir/$uname\n"; $i++;
 	$ldif[$i] = "userPassword: {CRYPT}*\n"; $i++;
-	$ldif[$i] = "rfc822Mailbox: $mail\n"; $i++;
-	$ldif[$i] = "quota: 1G\n"; $i++;
-	$ldif[$i] = "JammMailAlias: $gname.$sname@fet.at\n"; $i++;
-	$ldif[$i] = "accountActive: TRUE\n"; $i++;
+	$ldif[$i] = "mail: $mail\n"; $i++;
+	$ldif[$i] = "fetMailQuota: 1G\n"; $i++;
+	$ldif[$i] = "fetMailaccountActive: TRUE\n"; $i++;
 	$ldif[$i] = "\n"; $i++;
 
 	my $random = int( rand 65536 ) + 1;
