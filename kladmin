@@ -65,7 +65,7 @@ my $AFSTOK	= $ENV { uc "tokens" } || "tokens";		# AFS util to display the locall
 
 my %LDAP = ();
 
-for my $subCmd ( qw/ search add delete whoami / ) {		# LDAP utils
+for my $subCmd ( qw/ search add delete whoami modify / ) {		# LDAP utils
 
         my $fullName = "ldap" . $subCmd;
 
@@ -156,7 +156,7 @@ unless ( $CW ) { $CW = 15; }
 # Options 
 ##############################################################################
 
-getopts ( "AaDf:G:Ii:klL:m:p:S:Uu:v" );
+getopts ( "AaDif:G:Ii:klL:m:p:S:Uu:v" );
 
 our ( $opt_A, $opt_a, $opt_D, $opt_f, $opt_G, $opt_I, $opt_i, $opt_k, $opt_L, $opt_l, $opt_m, $opt_p, $opt_S, $opt_u, $opt_v );
 
@@ -1163,15 +1163,19 @@ sub afsGetPrm {
 sub ldpAddUsr {
 
 	my ( $ldapadd, $uname, $id, $dir, $gname, $sname, $mail ) = @_;
-
+	
+	print "id: $id\n";
+	print "uname: $uname\n";
+	print "mail: $mail\n";
+	
 	if ( $gname eq undef ) { $gname = "Given name"; }
 
 	if ( $sname eq undef ) { $sname = "Surname"; }
 
-
 	my $lcgname = lc ($gname);
-	my $lcsname = lc ($sname);
 
+	my $lcsname = lc ($sname);
+	
 	my @ldif; my $i = 0; 
 
 	$ldif[$i] = "dn: cn=$uname,$LDAPGPTH\n"; $i++;
@@ -1196,7 +1200,7 @@ sub ldpAddUsr {
 	$ldif[$i] = "userPassword: {CRYPT}*\n"; $i++;
 	$ldif[$i] = "mail: $mail\n"; $i++;
 	$ldif[$i] = "fetMailQuota: 1G\n"; $i++;
-	$ldif[$i] = "fetMailaccountActive: TRUE\n"; $i++;
+	$ldif[$i] = "fetMailAccountActive: TRUE\n"; $i++;
 	$ldif[$i] = "\n"; $i++;
 
 	my $random = int( rand 65536 ) + 1;
@@ -1249,7 +1253,7 @@ sub ldpDelUsr {
 
 		if ( /^dn:\s(uid=.*)$/ ) { push ( @output, $1 ); }
 	} 
-
+	
 	if ( @output == undef ) { return "\nNo LDAP entries found for user \"$uname\"\n"; }
 
 	foreach my $pt ( @output ) {
@@ -1810,13 +1814,14 @@ sub readFile {
 
 	open ( PWD, ">>$fileName" ) or die "Error: can't open $fileName: $!\n";
 
-	my ( $uname, $gname, $sname );
+	my ( $uname, $gname, $sname, $uid , $mail );
 
 	foreach ( @accList ) { 
 
-		if ( /^\s*(\w+)\s*$/ || /^(\w+)\s+\"([\w-\s]+)\"\s+([\w-\s]+)\s*$/ || /^(\w+)\s+([\w-]+)\s+([\w-\s]+)\s*$/ ) { 
+		if ( /^\s*(\w+)\s*$/ || /^\s*(\w+)\s*$/ || /^(\w+)\s+\"([\w-\s]+)\"\s+([\w-\s]+)\s*$/ || /^(\w+)\s+(\d+)\s+([\w-]+)\s+([\w-\s]+)\s*$/ || /^(\w+)\s+(\d+)\s+([\w-]+)\s+([\w-\s]+)\s+([\w-\.]+@(?:[\w]+\.)+[a-zA-Z]{2,4})\s*$/ ) { 
 
-			$uname = $1; $gname = $2; $sname = $3;
+			$uname = $1; $uid=$2; $gname = $3; $sname = $4; $mail = $5;
+			print "mail: $mail\n";
 
 			my @genGetIdsLst = genGetIds;
 
@@ -1901,8 +1906,13 @@ sub readFile {
 
 						$genDetDirRes = "/home";
 					}
+					print "uid: $uid\n";
+					print "Name: $gname $sname\n";
+					print "username: $uname\n";
 
-					my $ldpAddUsrOut = ldpAddUsr ( $LDAP { add }, $uname, $genDetIdsRes, $genDetDirRes, $gname, $sname ); 
+					#my $ldpAddUsrOut = ldpAddUsr ( $LDAP { add }, $uname, $genDetIdsRes, $genDetDirRes, $gname, $sname ); 
+					#my $ldpAddUsrOut = ldpAddUsr ( $LDAP { add }, $uname, $genDetIdsRes, $genDetDirRes, $opt_G, $opt_S, $opt_m ); 
+					my $ldpAddUsrOut = ldpAddUsr ( $LDAP { add }, $uname, $uid, $genDetDirRes, $gname, $sname , $mail ); 
 
 					print $ldpAddUsrOut;
 
