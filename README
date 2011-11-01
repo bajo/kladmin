@@ -231,10 +231,10 @@ for Kerberos and AFS:
 
 Example of a list of names in an input file, each with a valid format: 
 
-	bobama Barack Obama
-	dvvliet Don Van Vliet 
+	bobama 1023 Barack Obama barack@example.org
+	dvvliet 2012 Don Van Vliet d.v.vliet@example.com
 	ahroliveira "Antonio Henrique" de Oliveira Marques
-	pjwitzig Pieter-Jan Witzig
+	pjwitzig 2293 Pieter-Jan Witzig
 	rbourne Robin Bourne-Taylor
 
 
